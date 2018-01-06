@@ -34,7 +34,7 @@ if pims.tiff_stack.tifffile is None:
     pims.tiff_stack.tifffile = tifffile
 
 
-def imread(fname, nframes=1):
+def imread(fname, nframes=1, axis=0):
     """
     Read image data into a Dask Array.
 
@@ -73,10 +73,12 @@ def imread(fname, nframes=1):
         shape = (len(imgs),) + imgs.frame_shape
         dtype = numpy.dtype(imgs.pixel_type)
 
-    if nframes == -1:
-        nframes = shape[0]
+    axis = range(len(shape))[axis]
 
-    if nframes > shape[0]:
+    if nframes == -1:
+        nframes = shape[axis]
+
+    if nframes > shape[axis]:
         warnings.warn(
             "`nframes` larger than number of frames in file."
             " Will truncate to number of frames in file.",
